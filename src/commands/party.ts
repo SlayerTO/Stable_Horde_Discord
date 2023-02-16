@@ -90,7 +90,7 @@ export default class extends Command {
         }).catch(console.error)
         if(!thread?.id) return ctx.error({error: "Unable to start party"})
 
-        const party = await ctx.database.query(`INSERT INTO parties (channel_id, guild_id, creator_id, ends_at, style, award, recurring) VALUES ($1, $2, $3, CURRENT_TIMESTAMP + interval '${duration} day', $4, $5, $6) RETURNING *`, [
+        const party = await ctx.database.query(`INSERT INTO parties (channel_id, guild_id, creator_id, ends_at, style, award, recurring) VALUES (?, ?, ?, CURRENT_TIMESTAMP + interval '${duration} day', ?, ?, ?)`, [
             thread.id,
             thread.guildId,
             ctx.interaction.user.id,

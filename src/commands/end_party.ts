@@ -26,7 +26,7 @@ export default class extends Command {
         if(party?.creator_id !== ctx.interaction.user.id) return ctx.error({error: "Only the creator can stop this party"})
         let party_data;
         try {
-            party_data = await ctx.database.query("DELETE FROM parties WHERE channel_id=$1 RETURNING *", [ctx.interaction.channelId]).catch(console.error)
+            party_data = await ctx.database.query("DELETE FROM parties WHERE channel_id=? RETURNING *", [ctx.interaction.channelId]).catch(console.error)
             ctx.client.cache.delete(`party-${ctx.interaction.channelId}`)
         } catch (err) {
             return ctx.error({error: "Unable to end party"})

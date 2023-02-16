@@ -98,7 +98,7 @@ export class StableHordeClient extends Client {
     async getUserToken(user_id: string, database: mariadb.Pool | undefined): Promise<string|undefined> {
 		if(!database) return undefined;
 		try {
-			const rows = await database.query("SELECT * FROM user_tokens WHERE id=$1 LIMIT 1", [user_id])
+			const rows = await database.query("SELECT * FROM user_tokens WHERE id=? LIMIT 1", [user_id])
 			const token = this.config.advanced?.encrypt_token ? this.decryptString(rows[0].token) : rows[0].token
 			return token
 		} catch (err) {
@@ -141,7 +141,7 @@ export class StableHordeClient extends Client {
 	async getParty(id: string, database?: mariadb.Pool): Promise<Party | undefined> {
 		if(this.cache.has(`party-${id}`)) return this.cache.get(`party-${id}`)
 		try {
-			const p = await database?.query("SELECT * FROM parties WHERE channel_id=$1", [id])
+			const p = await database?.query("SELECT * FROM parties WHERE channel_id=?", [id])
 			this.cache.set(`party-${id}`, 1000 * 60 * 20)
 			return p.rows[0]!
 		} catch (err) {
