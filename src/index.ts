@@ -37,8 +37,7 @@ if(client.config.use_database !== false) {
         database: process.env["DB_NAME"],
         user: process.env["DB_USERNAME"], 
         password: process.env["DB_PASSWORD"], 
-        port: Number(process.env["DB_PORT"]), 
-        rowsAsArray: true 
+        port: Number(process.env["DB_PORT"])
     });
     
     connection.execute("CREATE TABLE IF NOT EXISTS `user_tokens` ( `index` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `id` varchar(100) NOT NULL, `token` varchar(100) NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `index` (`index`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");

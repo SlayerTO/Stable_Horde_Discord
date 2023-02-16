@@ -1,4 +1,4 @@
-import { /*Colors,*/ TextInputModalData } from "discord.js";
+import { Colors, TextInputModalData } from "discord.js";
 import { Modal } from "../classes/modal";
 import { ModalContext } from "../classes/modalContext";
 
@@ -42,11 +42,11 @@ export default class extends Modal {
         })
 
         
-        const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
-        if(pending_kudos) {
+        const pending_kudos = await ctx.database.query("SELECT * FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
+        if(pending_kudos?.length) {
 
-            // No Map functions on mariadb.pool
-
+            const delete_entry = await ctx.database.query("DELETE FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
+            if(!delete_entry?.amount) return;
             const res_promise = pending_kudos.map(async transaction => {
                 const from_token = await ctx.client.getUserToken(transaction.from_id, ctx.database)
                 if(!from_token) return {success: false, unique_id: transaction.unique_id, from: transaction.from_id, amount: transaction.amount}
