@@ -16,7 +16,7 @@ export default class extends Modal {
         if(!ctx.database) return ctx.error({error: "The database is disabled. This action requires a database."})
         const raw_token = (ctx.interaction.components[0]?.components[0] as TextInputModalData).value
         if(!raw_token?.length || raw_token ===  (ctx.client.config.default_token || "0000000000")) {
-            await ctx.database.query("DELETE FROM user_tokens WHERE id=$1 LIMIT 1", [ctx.interaction.user.id])
+            await ctx.database.query("DELETE FROM user_tokens WHERE id=? LIMIT 1", [ctx.interaction.user.id])
             return ctx.interaction.reply({
                 content: "Deleted token from database",
                 ephemeral: true
@@ -34,7 +34,7 @@ export default class extends Modal {
         }
         if(!user_data) return ctx.error({error: "Unable to find user with this token!"})
         const token = ctx.client.config.advanced?.encrypt_token ? ctx.client.encryptString(raw_token) : raw_token
-        const res = await ctx.database.query("INSERT INTO user_tokens VALUES (DEFAULT, $1, $2) ON DUPLICATE KEY UPDATE token=$2", [ctx.interaction.user.id, token])
+        const res = await ctx.database.query("INSERT INTO user_tokens VALUES (DEFAULT, ?, ?) ON DUPLICATE KEY UPDATE token=?", [ctx.interaction.user.id, token, ctx.interaction.user.id])
         if(res.affectedRows < 1) return ctx.error({error: "Unable to save token"})
         await ctx.interaction.reply({
             content: `S${ctx.client.config.advanced?.encrypt_token ? "ecurely s" : ""}aved your token in the database.`,
