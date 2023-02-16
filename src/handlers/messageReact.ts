@@ -4,10 +4,7 @@ import mariadb from "mariadb";
 import { StableHordeClient } from "../classes/client";
 
 export async function handleMessageReact(reaction: PartialMessageReaction | MessageReaction, user: User | PartialUser, client: StableHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde): Promise<any> {
-    console.log("handleMessageReact");
-    console.log(reaction.emoji.id);
     if(!client.config.use_database || !database || !client.config.react_to_transfer?.enabled) return;
-    console.log("database");
     if(!client.checkGuildPermissions(reaction.message.guildId, "react_to_transfer")) return;
     console.log("checkGuildPermissions");
     const emoji = client.config.react_to_transfer?.emojis?.find(e => e.id === reaction.emoji.id)
