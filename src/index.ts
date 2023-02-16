@@ -19,7 +19,7 @@ for (const line of readFileSync(`${process.cwd()}/.env`, 'utf8').split(/[\r\n]/)
     process.env[key] = value?.trim() || ""
 }
 
-let connection: Pool | undefined
+let connection: mariadb.Pool | undefined
 
 
 const client = new StableHordeClient({

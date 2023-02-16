@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { Store } from "../stores/store";
 import { Config, Party, StoreTypes } from "../types";
 import {existsSync, mkdirSync, writeFileSync} from "fs"
-import { Pool } from "pg";
+import mariadb from "mariadb";
 import crypto from "crypto"
 import Centra from "centra";
 
@@ -95,7 +95,7 @@ export class StableHordeClient extends Client {
 		else return `/${name}`
 	}
 	
-    async getUserToken(user_id: string, database: Pool | undefined): Promise<string|undefined> {
+    async getUserToken(user_id: string, database: mariadb.Pool | undefined): Promise<string|undefined> {
 		if(!database) return undefined;
         const rows = await database.query("SELECT * FROM user_tokens WHERE id=$1", [user_id])
         if(!rows.rowCount || !rows.rows[0]) return undefined
@@ -135,7 +135,7 @@ export class StableHordeClient extends Client {
 		return false
 	}
 
-	async getParty(id: string, database?: Pool): Promise<Party | undefined> {
+	async getParty(id: string, database?: mariadb.Pool): Promise<Party | undefined> {
 		if(this.cache.has(`party-${id}`)) return this.cache.get(`party-${id}`)
 		const p = await database?.query("SELECT * FROM parties WHERE channel_id=$1", [id])
 		if(!p?.rowCount) return undefined
@@ -143,7 +143,7 @@ export class StableHordeClient extends Client {
 		return p.rows[0]!
 	}
 
-	async cleanUpParties(database?: Pool) {
+	async cleanUpParties(database?: mariadb.Pool) {
 		const expired_parties = await database?.query("DELETE FROM parties WHERE ends_at <= CURRENT_TIMESTAMP RETURNING *").catch(console.error)
 		if(!expired_parties?.rowCount) return;
 		for(let party of expired_parties.rows) {
