@@ -1,4 +1,4 @@
-import { Colors, TextInputModalData } from "discord.js";
+//import { Colors, TextInputModalData } from "discord.js";
 import { Modal } from "../classes/modal";
 import { ModalContext } from "../classes/modalContext";
 
