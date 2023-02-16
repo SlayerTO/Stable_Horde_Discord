@@ -6,7 +6,9 @@ import { StableHordeClient } from "../classes/client";
 export async function handleMessageReact(reaction: PartialMessageReaction | MessageReaction, user: User | PartialUser, client: StableHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde): Promise<any> {
     if(!client.config.use_database || !database || !client.config.react_to_transfer?.enabled) return;
     if(!client.checkGuildPermissions(reaction.message.guildId, "react_to_transfer")) return;
+    console.log(reaction.emoji.id);
     const emoji = client.config.react_to_transfer?.emojis?.find(e => e.id === reaction.emoji.id)
+    console.log("found");
     if(!emoji) return;
     const u = await (user.partial ? user.fetch() : user)
     const r = await (reaction.partial ? reaction.fetch() : reaction)
@@ -53,6 +55,7 @@ export async function handleMessageReact(reaction: PartialMessageReaction | Mess
         }
         return await r.users.remove(u);
     }
+    console.log("target found");
     const target_shuser = await stable_horde_manager.findUser({token: target_usertoken})
     if(!target_shuser) return await r.users.remove(u);
     const transfer = await stable_horde_manager.postKudosTransfer({username: target_shuser.username!, amount: emoji.amount ?? 1}, {token: usertoken}).catch(console.error)
