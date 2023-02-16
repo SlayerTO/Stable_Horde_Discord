@@ -1,4 +1,4 @@
-//import { Colors, TextInputModalData } from "discord.js";
+import { Colors, TextInputModalData } from "discord.js";
 import { Modal } from "../classes/modal";
 import { ModalContext } from "../classes/modalContext";
 
@@ -13,13 +13,10 @@ export default class extends Modal {
     }
 
     override async run(ctx: ModalContext): Promise<any> {
-        return ctx.error({error: "Implementation Error, please stand by!"})
-
-        /*
         if(!ctx.database) return ctx.error({error: "The database is disabled. This action requires a database."})
         const raw_token = (ctx.interaction.components[0]?.components[0] as TextInputModalData).value
         if(!raw_token?.length || raw_token ===  (ctx.client.config.default_token || "0000000000")) {
-            await ctx.database.query("DELETE FROM user_tokens WHERE id=$1", [ctx.interaction.user.id])
+            await ctx.database.query("DELETE FROM user_tokens WHERE id=$1 LIMIT 1", [ctx.interaction.user.id])
             return ctx.interaction.reply({
                 content: "Deleted token from database",
                 ephemeral: true
@@ -43,6 +40,7 @@ export default class extends Modal {
             content: `S${ctx.client.config.advanced?.encrypt_token ? "ecurely s" : ""}aved your token in the database.`,
             ephemeral: true
         })
+        /*
         const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=$1 RETURNING *", [ctx.interaction.user.id]).catch(console.error)
         if(pending_kudos) {
 
