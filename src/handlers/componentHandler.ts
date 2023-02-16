@@ -1,10 +1,10 @@
 import StableHorde from "@zeldafan0225/stable_horde";
 import { AnySelectMenuInteraction, ButtonInteraction, ComponentType, PermissionsBitField } from "discord.js";
-import { Pool } from "pg";
+import mariadb from "mariadb";
 import { StableHordeClient } from "../classes/client";
 import { ComponentContext } from "../classes/componentContext";
 
-export async function handleComponents(interaction: ButtonInteraction | AnySelectMenuInteraction, client: StableHordeClient, database: Pool | undefined, stable_horde_manager: StableHorde) {
+export async function handleComponents(interaction: ButtonInteraction | AnySelectMenuInteraction, client: StableHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde) {
     const command = await client.components.getComponent(interaction).catch(() => null)
     if(!command) return;
     if(!interaction.inCachedGuild()) return;

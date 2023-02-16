@@ -1,10 +1,10 @@
 import StableHorde from "@zeldafan0225/stable_horde";
 import { ApplicationCommandType, MessageContextMenuCommandInteraction, UserContextMenuCommandInteraction } from "discord.js";
-import { Pool } from "pg";
+import mariadb from "mariadb";
 import { StableHordeClient } from "../classes/client";
 import { ContextContext } from "../classes/contextContext";
 
-export async function handleContexts(interaction: UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction, client: StableHordeClient, database: Pool | undefined, stable_horde_manager: StableHorde) {
+export async function handleContexts(interaction: UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction, client: StableHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde) {
     const command = await client.contexts.getContext(interaction).catch(() => null)
     if(!command) return;
 

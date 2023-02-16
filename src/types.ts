@@ -9,7 +9,7 @@ import {
     ModalSubmitInteraction,
     UserContextMenuCommandInteraction
 } from "discord.js";
-import { Pool } from "pg";
+import mariadb from "mariadb";
 import { StableHordeClient } from "./classes/client";
 
 export enum StoreTypes {
@@ -41,7 +41,7 @@ export interface CustomIDInitOptions {
 export interface BaseContextInitOptions {
     interaction: Interaction,
     client: StableHordeClient,
-    database: Pool | undefined,
+    database: mariadb.Pool | undefined,
     stable_horde_manager: StableHorde
 }
 

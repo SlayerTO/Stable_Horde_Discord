@@ -1,10 +1,10 @@
 import StableHorde from "@zeldafan0225/stable_horde";
 import { ChatInputCommandInteraction } from "discord.js";
-import { Pool } from "pg";
+import mariadb from "mariadb";
 import { StableHordeClient } from "../classes/client";
 import { CommandContext } from "../classes/commandContext";
 
-export async function handleCommands(interaction: ChatInputCommandInteraction, client: StableHordeClient, database: Pool | undefined, stable_horde_manager: StableHorde) {
+export async function handleCommands(interaction: ChatInputCommandInteraction, client: StableHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde) {
     const command = await client.commands.getCommand(interaction).catch(() => null)
     if(!command) return;
     const context = new CommandContext({interaction, client, database, stable_horde_manager})

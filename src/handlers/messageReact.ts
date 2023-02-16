@@ -1,9 +1,9 @@
 import StableHorde from "@zeldafan0225/stable_horde";
 import { Colors, MessageReaction, PartialMessageReaction, PartialUser, User } from "discord.js";
-import { Pool } from "pg";
+import mariadb from "mariadb";
 import { StableHordeClient } from "../classes/client";
 
-export async function handleMessageReact(reaction: PartialMessageReaction | MessageReaction, user: User | PartialUser, client: StableHordeClient, database: Pool | undefined, stable_horde_manager: StableHorde): Promise<any> {
+export async function handleMessageReact(reaction: PartialMessageReaction | MessageReaction, user: User | PartialUser, client: StableHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde): Promise<any> {
     if(!client.config.use_database || !database || !client.config.react_to_transfer?.enabled) return;
     if(!client.checkGuildPermissions(reaction.message.guildId, "react_to_transfer")) return;
     const emoji = client.config.react_to_transfer?.emojis?.find(e => e.id === reaction.emoji.id)

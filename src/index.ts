@@ -4,12 +4,12 @@ import { StableHordeClient } from "./classes/client";
 import { handleCommands } from "./handlers/commandHandler";
 import { handleComponents } from "./handlers/componentHandler";
 import { handleModals } from "./handlers/modalHandler";
-import { Pool } from "pg"
 import { handleAutocomplete } from "./handlers/autocompleteHandler";
 import StableHorde from "@zeldafan0225/stable_horde";
 import { handleContexts } from "./handlers/contextHandler";
 import {existsSync, mkdirSync} from "fs"
 import { handleMessageReact } from "./handlers/messageReact";
+import mariadb from "mariadb";
 
 const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/
 for (const line of readFileSync(`${process.cwd()}/.env`, 'utf8').split(/[\r\n]/)) {
@@ -31,22 +31,23 @@ if(client.config.advanced?.encrypt_token && !process.env["ENCRYPTION_KEY"]?.leng
     throw new Error("Either give a valid encryption key (you can generate one with 'npm run generate-key') or disable token encryption in your config.json file.")
 
 if(client.config.use_database !== false) {
-    connection = new Pool({
-        user: process.env["DB_USERNAME"],
+    connection = mariadb.createPool({
         host: process.env["DB_IP"],
         database: process.env["DB_NAME"],
-        password: process.env["DB_PASSWORD"],
-        port: Number(process.env["DB_PORT"]),
-    })
+        user: process.env["DB_USERNAME"], 
+        password: process.env["DB_PASSWORD"], 
+        port: Number(process.env["DB_PORT"]), 
+        rowsAsArray: true 
+    });
     
     connection.connect().then(async () => {
-        await connection!.query("CREATE TABLE IF NOT EXISTS user_tokens (index SERIAL, id VARCHAR(100) PRIMARY KEY, token VARCHAR(100) NOT NULL)")
-        await connection!.query("CREATE TABLE IF NOT EXISTS parties (index SERIAL, channel_id VARCHAR(100) PRIMARY KEY, guild_id VARCHAR(100) NOT NULL, creator_id VARCHAR(100) NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ends_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, style VARCHAR(1000) NOT NULL, award INT NOT NULL DEFAULT 1, recurring BOOLEAN NOT NULL DEFAULT false, users VARCHAR(100)[] NOT NULL DEFAULT '{}')")
-        await connection!.query("CREATE TABLE IF NOT EXISTS pending_kudos (index SERIAL, unique_id VARCHAR(200) PRIMARY KEY, target_id VARCHAR(100) NOT NULL, from_id VARCHAR(100) NOT NULL, amount int NOT NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
+        await connection!.execute("CREATE TABLE IF NOT EXISTS user_tokens (index SERIAL, id VARCHAR(100) PRIMARY KEY, token VARCHAR(100) NOT NULL)")
+        await connection!.execute("CREATE TABLE IF NOT EXISTS parties (index SERIAL, channel_id VARCHAR(100) PRIMARY KEY, guild_id VARCHAR(100) NOT NULL, creator_id VARCHAR(100) NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ends_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, style VARCHAR(1000) NOT NULL, award INT NOT NULL DEFAULT 1, recurring BOOLEAN NOT NULL DEFAULT false, users VARCHAR(100)[] NOT NULL DEFAULT '{}')")
+        await connection!.execute("CREATE TABLE IF NOT EXISTS pending_kudos (index SERIAL, unique_id VARCHAR(200) PRIMARY KEY, target_id VARCHAR(100) NOT NULL, from_id VARCHAR(100) NOT NULL, amount int NOT NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
     }).catch(console.error);
 
     setInterval(async () => {
-        await connection?.query("DELETE FROM pending_kudos WHERE updated_at <= CURRENT_TIMESTAMP - interval '1 week'").catch(console.error)
+        await connection?.execute("DELETE FROM pending_kudos WHERE updated_at <= CURRENT_TIMESTAMP - interval '1 week'").catch(console.error)
     }, 1000 * 60 * 60 * 24)
 }
 
