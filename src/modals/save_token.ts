@@ -42,7 +42,7 @@ export default class extends Modal {
         })
 
         
-        const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("SELECT * FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
+        const pending_kudos = await ctx.database.query("SELECT * FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
         if(pending_kudos?.length) {
 
             const delete_entry = await ctx.database.query("DELETE FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
