@@ -99,7 +99,10 @@ export class StableHordeClient extends Client {
 		if(!database) return undefined;
 		try {
 			const rows = await database.query("SELECT * FROM user_tokens WHERE id=? LIMIT 1", [user_id])
+			console.log(rows)
+			console.log(rows[0].token)
 			const token = this.config.advanced?.encrypt_token ? this.decryptString(rows[0].token) : rows[0].token
+			console.log(token)
 			return token
 		} catch (err) {
 			return undefined
@@ -151,7 +154,7 @@ export class StableHordeClient extends Client {
 
 	async cleanUpParties(database?: mariadb.Pool) {
 		try {
-			const expired_parties = await database?.query("DELETE FROM parties WHERE ends_at <= CURRENT_TIMESTAMP RETURNING *").catch(console.error)
+			const expired_parties = await database?.query("DELETE FROM parties WHERE ends_at <= CURRENT_TIMESTAMP").catch(console.error)
 			for(let party of expired_parties) {
 				const channel = await this.channels.fetch(party.channel_id).catch(console.error)
 				if(!channel?.id || channel?.type !== ChannelType.PublicThread) continue;
