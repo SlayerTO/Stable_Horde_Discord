@@ -13,6 +13,9 @@ export default class extends Modal {
     }
 
     override async run(ctx: ModalContext): Promise<any> {
+        return ctx.error({error: "Implementation Error, please stand by!"})
+
+        /*
         if(!ctx.database) return ctx.error({error: "The database is disabled. This action requires a database."})
         const raw_token = (ctx.interaction.components[0]?.components[0] as TextInputModalData).value
         if(!raw_token?.length || raw_token ===  (ctx.client.config.default_token || "0000000000")) {
@@ -42,6 +45,9 @@ export default class extends Modal {
         })
         const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=$1 RETURNING *", [ctx.interaction.user.id]).catch(console.error)
         if(pending_kudos) {
+
+            // No Map functions on mariadb.pool
+
             const res_promise = pending_kudos.map(async transaction => {
                 const from_token = await ctx.client.getUserToken(transaction.from_id, ctx.database)
                 if(!from_token) return {success: false, unique_id: transaction.unique_id, from: transaction.from_id, amount: transaction.amount}
@@ -49,6 +55,8 @@ export default class extends Modal {
                 if(!res?.transferred) return {success: false, unique_id: transaction.unique_id, from: transaction.from_id, amount: transaction.amount}
                 else return {success: true, unique_id: transaction.unique_id, from: transaction.from_id, amount: res.transferred}
             })
+
+            
             const res = await Promise.all(res_promise)
             const embed = {
                 title: "Kudos",
@@ -62,6 +70,6 @@ export default class extends Modal {
                 ephemeral: true,
                 embeds: [embed]
             }).catch(console.error)
-        }
+        }*/
     }
 }
