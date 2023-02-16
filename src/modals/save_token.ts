@@ -47,7 +47,7 @@ export default class extends Modal {
 
             const delete_entry = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
             if(!delete_entry?.amount) return;
-            const res_promise = pending_kudos.map(async transaction => {
+            const res_promise = (pending_kudos as {unique_id: string, target_id: string, from_id: string, amount: number}).map(async transaction => {
                 const from_token = await ctx.client.getUserToken(transaction.from_id, ctx.database)
                 if(!from_token) return {success: false, unique_id: transaction.unique_id, from: transaction.from_id, amount: transaction.amount}
                 const res = await ctx.stable_horde_manager.postKudosTransfer({username: user_data.username!, amount: transaction.amount}, {token: from_token}).catch(console.error)
