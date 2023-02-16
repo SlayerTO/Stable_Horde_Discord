@@ -40,8 +40,9 @@ export default class extends Modal {
             content: `S${ctx.client.config.advanced?.encrypt_token ? "ecurely s" : ""}aved your token in the database.`,
             ephemeral: true
         })
-        /*
-        const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=$1 RETURNING *", [ctx.interaction.user.id]).catch(console.error)
+
+        
+        const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=? LIMIT 1", [ctx.interaction.user.id]).catch(console.error)
         if(pending_kudos) {
 
             // No Map functions on mariadb.pool

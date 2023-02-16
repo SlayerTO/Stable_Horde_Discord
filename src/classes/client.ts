@@ -99,7 +99,7 @@ export class StableHordeClient extends Client {
 		if(!database) return undefined;
 		try {
 			const rows = await database.query("SELECT * FROM user_tokens WHERE id=? LIMIT 1", [user_id])
-			const token = this.config.advanced?.encrypt_token ? this.decryptString(rows[0][2]) : rows[0][2]
+			const token = this.config.advanced?.encrypt_token ? this.decryptString(rows[0].token) : rows[0].token
 			return token
 		} catch (err) {
 			return undefined
