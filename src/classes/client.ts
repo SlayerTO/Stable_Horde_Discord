@@ -97,10 +97,13 @@ export class StableHordeClient extends Client {
 	
     async getUserToken(user_id: string, database: mariadb.Pool | undefined): Promise<string|undefined> {
 		if(!database) return undefined;
-        const rows = await database.query("SELECT * FROM user_tokens WHERE id=$1", [user_id])
-        if(!rows.rowCount || !rows.rows[0]) return undefined
-		const token = this.config.advanced?.encrypt_token ? this.decryptString(rows.rows[0].token) : rows.rows[0].token
-        return token
+		try {
+			const rows = await database.query("SELECT * FROM user_tokens WHERE id=$1 LIMIT 1", [user_id])
+			const token = this.config.advanced?.encrypt_token ? this.decryptString(rows[0].token) : rows[0].token
+			return token
+		} catch (err) {
+			return undefined
+		}
     }
 
 	decryptString(hash: string){
@@ -137,19 +140,25 @@ export class StableHordeClient extends Client {
 
 	async getParty(id: string, database?: mariadb.Pool): Promise<Party | undefined> {
 		if(this.cache.has(`party-${id}`)) return this.cache.get(`party-${id}`)
-		const p = await database?.query("SELECT * FROM parties WHERE channel_id=$1", [id])
-		if(!p?.rowCount) return undefined
-		this.cache.set(`party-${id}`, 1000 * 60 * 20)
-		return p.rows[0]!
+		try {
+			const p = await database?.query("SELECT * FROM parties WHERE channel_id=$1", [id])
+			this.cache.set(`party-${id}`, 1000 * 60 * 20)
+			return p.rows[0]!
+		} catch (err) {
+			return undefined
+		}
 	}
 
 	async cleanUpParties(database?: mariadb.Pool) {
-		const expired_parties = await database?.query("DELETE FROM parties WHERE ends_at <= CURRENT_TIMESTAMP RETURNING *").catch(console.error)
-		if(!expired_parties?.rowCount) return;
-		for(let party of expired_parties.rows) {
-			const channel = await this.channels.fetch(party.channel_id).catch(console.error)
-			if(!channel?.id || channel?.type !== ChannelType.PublicThread) continue;
-			await channel?.send({content: `This party ended.\n${party.users?.length} users participated.\nThanks to <@${party.creator_id}> for hosting this party`})
+		try {
+			const expired_parties = await database?.query("DELETE FROM parties WHERE ends_at <= CURRENT_TIMESTAMP RETURNING *").catch(console.error)
+			for(let party of expired_parties) {
+				const channel = await this.channels.fetch(party.channel_id).catch(console.error)
+				if(!channel?.id || channel?.type !== ChannelType.PublicThread) continue;
+				await channel?.send({content: `This party ended.\n${party.users?.length} users participated.\nThanks to <@${party.creator_id}> for hosting this party`})
+			}
+		} catch (err) {
+			return;
 		}
 	}
 }

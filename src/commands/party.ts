@@ -99,7 +99,7 @@ export default class extends Command {
             recurring
         ]).catch(console.error)
 
-        if(!party?.rowCount) {
+        if(!party) {
             await thread.delete()
             return ctx.error({error: "Unable to start party"})
         }

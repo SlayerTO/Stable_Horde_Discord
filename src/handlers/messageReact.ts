@@ -33,7 +33,7 @@ export async function handleMessageReact(reaction: PartialMessageReaction | Mess
         // target user has not logged in
         if(client.config.react_to_transfer.allow_delayed_claim) {
             const res = await database.query(`INSERT INTO pending_kudos (unique_id, target_id, from_id, amount) VALUES ($1, $2, $3, $4) ON CONFLICT (unique_id) DO UPDATE SET amount = pending_kudos.amount + $4, updated_at = CURRENT_TIMESTAMP RETURNING *`, [`${target_user.id}_${u.id}`, target_user.id, u.id, emoji.amount]).catch(console.error)
-            if(res?.rowCount) {
+            if(res) {
                 await target_user.send({
                     embeds: [{
                         title: emoji.title ?? "Surprise",

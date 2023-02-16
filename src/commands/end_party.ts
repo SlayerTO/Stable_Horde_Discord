@@ -24,13 +24,16 @@ export default class extends Command {
         const party = await ctx.client.getParty(ctx.interaction.channelId, ctx.database)
         if(!party?.channel_id) return ctx.error({error: "Unable to find party"})
         if(party?.creator_id !== ctx.interaction.user.id) return ctx.error({error: "Only the creator can stop this party"})
-        const party_data = await ctx.database.query("DELETE FROM parties WHERE channel_id=$1 RETURNING *", [ctx.interaction.channelId]).catch(console.error)
-        if(!party_data?.rowCount) return ctx.error({error: "Unable to end party"})
-        ctx.client.cache.delete(`party-${ctx.interaction.channelId}`)
-
+        let party_data;
+        try {
+            party_data = await ctx.database.query("DELETE FROM parties WHERE channel_id=$1 RETURNING *", [ctx.interaction.channelId]).catch(console.error)
+            ctx.client.cache.delete(`party-${ctx.interaction.channelId}`)
+        } catch (err) {
+            return ctx.error({error: "Unable to end party"})
+        }
         await ctx.interaction.reply({content: "Party ended.", ephemeral: true})
         ctx.interaction.channel?.send({
-            content: `The party police showed up and broke down this party.\n${party_data.rows[0].users?.length} users participated.\nThanks to <@${party.creator_id}> for hosting this party`
+            content: `The party police showed up and broke down this party.\n${party_data[0].users?.length} users participated.\nThanks to <@${party.creator_id}> for hosting this party`
         })
     }
 }

@@ -35,14 +35,14 @@ export default class extends Modal {
         if(!user_data) return ctx.error({error: "Unable to find user with this token!"})
         const token = ctx.client.config.advanced?.encrypt_token ? ctx.client.encryptString(raw_token) : raw_token
         const res = await ctx.database.query("INSERT INTO user_tokens VALUES (DEFAULT, $1, $2) ON CONFLICT (id) DO UPDATE SET token=$2 RETURNING *", [ctx.interaction.user.id, token])
-        if(!res.rowCount) return ctx.error({error: "Unable to save token"})
+        if(res.affectedRows < 1) return ctx.error({error: "Unable to save token"})
         await ctx.interaction.reply({
             content: `S${ctx.client.config.advanced?.encrypt_token ? "ecurely s" : ""}aved your token in the database.`,
             ephemeral: true
         })
         const pending_kudos = await ctx.database.query<{unique_id: string, target_id: string, from_id: string, amount: number}>("DELETE FROM pending_kudos WHERE target_id=$1 RETURNING *", [ctx.interaction.user.id]).catch(console.error)
-        if(pending_kudos?.rowCount) {
-            const res_promise = pending_kudos.rows.map(async transaction => {
+        if(pending_kudos) {
+            const res_promise = pending_kudos.map(async transaction => {
                 const from_token = await ctx.client.getUserToken(transaction.from_id, ctx.database)
                 if(!from_token) return {success: false, unique_id: transaction.unique_id, from: transaction.from_id, amount: transaction.amount}
                 const res = await ctx.stable_horde_manager.postKudosTransfer({username: user_data.username!, amount: transaction.amount}, {token: from_token}).catch(console.error)
