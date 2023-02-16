@@ -41,9 +41,9 @@ if(client.config.use_database !== false) {
         rowsAsArray: true 
     });
     
-    connection.execute("CREATE TABLE IF NOT EXISTS user_tokens (index SERIAL, id VARCHAR(100) PRIMARY KEY, token VARCHAR(100) NOT NULL)");
-    connection.execute("CREATE TABLE IF NOT EXISTS parties (index SERIAL, channel_id VARCHAR(100) PRIMARY KEY, guild_id VARCHAR(100) NOT NULL, creator_id VARCHAR(100) NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ends_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, style VARCHAR(1000) NOT NULL, award INT NOT NULL DEFAULT 1, recurring BOOLEAN NOT NULL DEFAULT false, users VARCHAR(100)[] NOT NULL DEFAULT '{}')");
-    connection.execute("CREATE TABLE IF NOT EXISTS pending_kudos (index SERIAL, unique_id VARCHAR(200) PRIMARY KEY, target_id VARCHAR(100) NOT NULL, from_id VARCHAR(100) NOT NULL, amount int NOT NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+    connection.execute("CREATE TABLE IF NOT EXISTS `user_tokens` ( `index` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `id` varchar(100) NOT NULL, `token` varchar(100) NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `index` (`index`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+    connection.execute("CREATE TABLE IF NOT EXISTS `parties` ( `index` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `channel_id` varchar(100) NOT NULL, `guild_id` varchar(100) NOT NULL, `creator_id` varchar(100) NOT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `ends_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `style` varchar(1000) NOT NULL, `award` int(11) NOT NULL DEFAULT '1', `recurring` tinyint(1) NOT NULL DEFAULT '0', `users` varchar(100) NOT NULL DEFAULT '{}', PRIMARY KEY (`channel_id`), UNIQUE KEY `index` (`index`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+    connection.execute("CREATE TABLE IF NOT EXISTS `pending_kudos` ( `index` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `unique_id` varchar(200) NOT NULL, `target_id` varchar(100) NOT NULL, `from_id` varchar(100) NOT NULL, `amount` int(11) NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE KEY `index` (`index`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     
     setInterval(async () => {
         await connection?.execute("DELETE FROM pending_kudos WHERE updated_at <= CURRENT_TIMESTAMP - interval '1 week'").catch(console.error)
