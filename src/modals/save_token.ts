@@ -69,6 +69,6 @@ export default class extends Modal {
                 ephemeral: true,
                 embeds: [embed]
             }).catch(console.error)
-        }*/
+        }
     }
 }
