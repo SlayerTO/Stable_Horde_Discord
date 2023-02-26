@@ -46,7 +46,7 @@ export default class extends Context {
         const props = []
         if(user_data.moderator) props.push("⚔️ Moderator")
         if(user_data.trusted) props.push("🤝 Trusted")
-        if(user_data.suspicious) props.push(`Suspicious ${user_data.suspicious}`)
+        if(user_data.flagged) props.push(`🚩 Flagged`)
         const embed = new EmbedBuilder({
             color: Colors.Blue,
             footer: {text: `${props.join(" | ")}`},
