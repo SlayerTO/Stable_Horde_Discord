@@ -32,8 +32,12 @@ export default class extends Command {
             return ctx.error({error: "Unable to end party"})
         }
         await ctx.interaction.reply({content: "Party ended.", ephemeral: true})
-        ctx.interaction.channel?.send({
-            content: `The party police showed up and broke down this party.\n${party_data[0].users?.length} users participated.\nThanks to <@${party.creator_id}> for hosting this party`
-        })
+        try {
+            ctx.interaction.channel?.send({
+                content: `The party police showed up and broke down this party.\n${party_data[0].users?.length} users participated.\nThanks to <@${party.creator_id}> for hosting this party`
+            })
+        } catch (err) {
+            return ctx.error({error: "Unable to end party"})
+        }
     }
 }
