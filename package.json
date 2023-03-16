@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "clean": "npm clean-install",
     "deploy": "node cleanup.js && npm i && npx tsc -p . && node .",
     "update": "node cleanup.js && npm update && npx tsc -p . && node .",
     "generate-key": "npx tsc -p . && node dist/generate_salt.js"
@@ -14,10 +15,6 @@
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/SlayerTO/AI_Horde_Discord/issues"
-  },
-  "homepage": "https://github.com/SlayerTO/AI_Horde_Discord#readme",
   "dependencies": {
     "@thunder04/supermap": "^3.0.2",
     "@zeldafan0225/ai_horde": "^3.0.2",

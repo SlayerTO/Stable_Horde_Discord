@@ -70,7 +70,7 @@ export default class extends Command {
             color: Colors.Blue,
             footer: {text: `${props.join(" | ")}`},
             title: `${user_data.username}`,
-            description: `**Total Kudos:** ${(user_data.kudos).toLocaleString('en-us', {minimumFractionDigits: 0})}`,
+            description: `**Total Kudos:** ${(user_data.kudos || 0).toLocaleString('en-us', {minimumFractionDigits: 0})}`,
         })
 
         ctx.interaction.reply({
