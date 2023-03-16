@@ -73,7 +73,7 @@ export default class extends Command {
             description: `**Total Kudos:** ${(user_data.kudos || 0).toLocaleString('en-us', {minimumFractionDigits: 0})}`,
         })
 
-        ctx.interaction.reply({
+        ctx.interaction.editReply({
             embeds: [embed.toJSON()],
             components: [{
                 type: 1,
