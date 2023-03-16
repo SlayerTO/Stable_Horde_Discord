@@ -8,7 +8,7 @@ import mariadb from "mariadb";
 import crypto from "crypto"
 import Centra from "centra";
 
-export class StableHordeClient extends Client {
+export class AIHordeClient extends Client {
 	commands: Store<StoreTypes.COMMANDS>;
 	components: Store<StoreTypes.COMPONENTS>;
 	contexts: Store<StoreTypes.CONTEXTS>;

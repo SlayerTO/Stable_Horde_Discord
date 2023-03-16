@@ -15,12 +15,12 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ZeldaFan0225/Stable_Horde_Discord/issues"
+    "url": "https://github.com/SlayerTO/AI_Horde_Discord/issues"
   },
-  "homepage": "https://github.com/ZeldaFan0225/Stable_Horde_Discord#readme",
+  "homepage": "https://github.com/SlayerTO/AI_Horde_Discord#readme",
   "dependencies": {
     "@thunder04/supermap": "^3.0.2",
-    "@zeldafan0225/stable_horde": "^2.4.0",
+    "@zeldafan0225/ai_horde": "^3.0.2",
     "centra": "^2.5.0",
     "discord.js": "^14.6.0",
     "mariadb": "^3.1.0",

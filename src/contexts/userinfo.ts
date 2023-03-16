@@ -31,12 +31,12 @@ export default class extends Context {
             style: 4
         })
         if(!token) return ctx.interaction.reply({
-            content: `Please add your token before your user details can be shown.\nThis is needed to perform actions on your behalf\n\nBy entering your token you agree to the ${await ctx.client.getSlashCommandTag("terms")}\n\n\nDon't know what the token is?\nCreate a stable horde account here: https://stablehorde.net/register`,
+            content: `Please add your token before your user details can be shown.\nThis is needed to perform actions on your behalf\n\nBy entering your token you agree to the ${await ctx.client.getSlashCommandTag("terms")}\n\n\nDon't know what the token is?\nCreate an ai horde account here: https://aihorde.net/register`,
             components: [{type: 1, components: [add_token_button.toJSON()]}],
             ephemeral: true
         })
 
-        const user_data = await ctx.stable_horde_manager.findUser({token}).catch(() => null)
+        const user_data = await ctx.ai_horde_manager.findUser({token}).catch(() => null)
 
         if(!user_data) return ctx.interaction.reply({
             content: "Unable to find user for saved token.",
@@ -57,8 +57,6 @@ Interrogation Requested \`${user_data.records?.request?.interrogation}\`
 Interrogation Generated \`${user_data.records?.fulfillment?.interrogation}\`
 Text Requested \`${user_data.records?.request?.text}\`
 Text Generated \`${user_data.records?.fulfillment?.text}\`
-Allowed Concurrency \`${user_data.concurrency}\`
-Pseudonymous User \`${user_data.pseudonymous}\`
 
 **Kudos**
 Total \`${user_data.kudos}\`
