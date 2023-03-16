@@ -3,7 +3,7 @@ import { Colors, MessageReaction, PartialMessageReaction, PartialUser, User } fr
 import mariadb from "mariadb";
 import { AIHordeClient } from "../classes/client";
 
-export async function handleMessageReact(reaction: PartialMessageReaction | MessageReaction, user: User | PartialUser, client: AIHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: AIHorde): Promise<any> {
+export async function handleMessageReact(reaction: PartialMessageReaction | MessageReaction, user: User | PartialUser, client: AIHordeClient, database: mariadb.Pool | undefined, ai_horde_manager: AIHorde): Promise<any> {
     if(!client.config.use_database || !database || !client.config.react_to_transfer?.enabled) return;
     if(!client.checkGuildPermissions(reaction.message.guildId, "react_to_transfer")) return;
     const emoji = client.config.react_to_transfer?.emojis?.find(e => e.id === reaction.emoji.id)

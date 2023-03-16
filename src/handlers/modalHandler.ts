@@ -4,7 +4,7 @@ import mariadb from "mariadb";
 import { AIHordeClient } from "../classes/client";
 import { ModalContext } from "../classes/modalContext";
 
-export async function handleModals(interaction: ModalSubmitInteraction, client: AIHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: AIHorde) {
+export async function handleModals(interaction: ModalSubmitInteraction, client: AIHordeClient, database: mariadb.Pool | undefined, ai_horde_manager: AIHorde) {
     const command = await client.modals.getModal(interaction).catch(() => null)
     if(!command) return;
     let context = new ModalContext({interaction, client, database, ai_horde_manager})

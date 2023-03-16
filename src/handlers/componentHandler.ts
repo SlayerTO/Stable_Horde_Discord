@@ -4,7 +4,7 @@ import mariadb from "mariadb";
 import { AIHordeClient } from "../classes/client";
 import { ComponentContext } from "../classes/componentContext";
 
-export async function handleComponents(interaction: ButtonInteraction | AnySelectMenuInteraction, client: AIHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: AIHorde) {
+export async function handleComponents(interaction: ButtonInteraction | AnySelectMenuInteraction, client: AIHordeClient, database: mariadb.Pool | undefined, ai_horde_manager: AIHorde) {
     const command = await client.components.getComponent(interaction).catch(() => null)
     if(!command) return;
     if(!interaction.inCachedGuild()) return;

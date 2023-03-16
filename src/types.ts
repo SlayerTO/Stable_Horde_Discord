@@ -44,7 +44,7 @@ export interface BaseContextInitOptions {
     interaction: Interaction,
     client: AIHordeClient,
     database: mariadb.Pool | undefined,
-    stable_horde_manager: AIHorde
+    ai_horde_manager: AIHorde
 }
 
 export interface CommandContextInitOptions extends BaseContextInitOptions {

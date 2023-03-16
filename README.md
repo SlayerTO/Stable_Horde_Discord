@@ -16,6 +16,7 @@ The bot has the following features:
 - /generate command with all options the api supports at the time of creating this file
 - /login, /logout and /updatetoken for users to add and manage their account which they can create at https://aihorde.net/register
 - /userinfo (Userinfo context command) which shows your ai horde user information and the user information of anybody else who is logged in
+- /balance (Balance context command) which shows your ai horde user kudos of anybody else who is logged in
 - /terms which shows how the bot currently handles the api token and further information
 - /models which shows all currently available models
 - /worker which lets you see information on an active worker

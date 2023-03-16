@@ -4,7 +4,7 @@ import mariadb from "mariadb";
 import { AIHordeClient } from "../classes/client";
 import { ContextContext } from "../classes/contextContext";
 
-export async function handleContexts(interaction: UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction, client: AIHordeClient, database: mariadb.Pool | undefined, stable_horde_manager: StableHorde) {
+export async function handleContexts(interaction: UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction, client: AIHordeClient, database: mariadb.Pool | undefined, ai_horde_manager: AIHorde) {
     const command = await client.contexts.getContext(interaction).catch(() => null)
     if(!command) return;
 

@@ -10,7 +10,7 @@ export class BaseContext{
     interaction: Interaction
     client: AIHordeClient
     database: mariadb.Pool | undefined
-    stable_horde_manager: AIHorde
+    ai_horde_manager: AIHorde
     constructor(options: BaseContextInitOptions) {
         this.interaction = options.interaction
         this.client = options.client

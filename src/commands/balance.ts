@@ -3,9 +3,9 @@ import { Command } from "../classes/command";
 import { CommandContext } from "../classes/commandContext";
 
 const command_data = new SlashCommandBuilder()
-    .setName("userinfo")
+    .setName("balance")
     .setDMPermission(false)
-    .setDescription(`Shows information on your ai horde account`)
+    .setDescription(`Shows kudos on your ai horde account`)
     .addUserOption(
         new SlashCommandUserOption()
         .setName("user")
@@ -16,7 +16,7 @@ const command_data = new SlashCommandBuilder()
 export default class extends Command {
     constructor() {
         super({
-            name: "userinfo",
+            name: "balance",
             command_data: command_data.toJSON(),
             staff_only: false,
         })
@@ -70,27 +70,10 @@ export default class extends Command {
             color: Colors.Blue,
             footer: {text: `${props.join(" | ")}`},
             title: `${user_data.username}`,
-            description: `Images Requested \`${(user_data.records?.request?.image).toLocaleString('en-us', {minimumFractionDigits: 0})}\` (\`${(user_data.records?.usage?.megapixelsteps).toLocaleString('en-us', {minimumFractionDigits: 0})}\` Megapixelsteps)
-Images Generated \`${(user_data.records?.fulfillment?.image).toLocaleString('en-us', {minimumFractionDigits: 0})}\` (\`${(user_data.records?.contribution?.megapixelsteps).toLocaleString('en-us', {minimumFractionDigits: 0})}\` Megapixelsteps)
-Interrogation Requested \`${(user_data.records?.request?.interrogation).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Interrogation Generated \`${(user_data.records?.fulfillment?.interrogation).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Text Requested \`${(user_data.records?.request?.text).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Text Generated \`${(user_data.records?.fulfillment?.text).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-
-**Kudos**
-Total \`${(user_data.kudos).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Accumulated \`${(user_data.kudos_details?.accumulated).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Gifted \`${(user_data.kudos_details?.gifted).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Admin \`${(user_data.kudos_details?.admin).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Received \`${(user_data.kudos_details?.received).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Recurring \`${(user_data.kudos_details?.recurring).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-
-**Workers**
-Invited \`${(user_data.worker_invited).toLocaleString('en-us', {minimumFractionDigits: 0})}\`
-Contributing \`${(user_data.worker_count).toLocaleString('en-us', {minimumFractionDigits: 0})}\``,
+            description: `**Total Kudos:** ${(user_data.kudos).toLocaleString('en-us', {minimumFractionDigits: 0})}`,
         })
 
-        ctx.interaction.editReply({
+        ctx.interaction.reply({
             embeds: [embed.toJSON()],
             components: [{
                 type: 1,
